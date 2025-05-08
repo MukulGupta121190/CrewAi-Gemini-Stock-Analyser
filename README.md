@@ -52,6 +52,7 @@ streamlit run app.py
 ![App Screenshot](screenshot.png)
 
 ## Screenshots
+<img width="700" alt="Screenshot 2025-05-08 at 6 47 23 PM" src="https://github.com/user-attachments/assets/35592071-f31c-4dc9-b478-16dafcfe60c2" />
 <img width="308" alt="img1" src="https://github.com/user-attachments/assets/f087f0ab-4a62-4de4-8235-79d588f9acc8">
 <img width="388" alt="img2" src="https://github.com/user-attachments/assets/592d5a9b-7118-407e-bb55-39610414ffb6">
 <img width="505" alt="img3" src="https://github.com/user-attachments/assets/fef3d724-0c81-49f9-a949-80ccd7e63938"><br></br>

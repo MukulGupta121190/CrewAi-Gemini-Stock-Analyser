@@ -47,16 +47,9 @@ The Stock Analysis Report Generator allows users to generate comprehensive stock
 ```bash
 streamlit run app.py
 ```
-## 🚀 Demo Screenshot
-
-![App Screenshot](screenshot.png)
-
-## Screenshots
-<img width="700" alt="Screenshot 2025-05-08 at 6 47 23 PM" src="https://github.com/user-attachments/assets/35592071-f31c-4dc9-b478-16dafcfe60c2" />
-<img width="308" alt="img1" src="https://github.com/user-attachments/assets/f087f0ab-4a62-4de4-8235-79d588f9acc8">
-<img width="388" alt="img2" src="https://github.com/user-attachments/assets/592d5a9b-7118-407e-bb55-39610414ffb6">
-<img width="505" alt="img3" src="https://github.com/user-attachments/assets/fef3d724-0c81-49f9-a949-80ccd7e63938"><br></br>
-<img width="411" alt="img4" src="https://github.com/user-attachments/assets/5892b045-ab56-4e52-a1eb-92cf7ad8fa15">
+## 🚀 Demo Screenshots
+Application Interface <img width="400" alt="Application Interface" src="https://github.com/user-attachments/assets/35592071-f31c-4dc9-b478-16dafcfe60c2"/>
+<img width="400" alt="Reliance_Industries_Stock_Analysis_Report" src="https://github.com/user-attachments/assets/7b21bf71-fdb9-43cf-bea1-fdab0b6a1f24)"/>
 
 ## 📦 Setup Instructions
 
@@ -85,7 +78,13 @@ AGENTOPS_API_KEY=your_agentops_api_key
 SENDER_EMAIL=your_email@gmail.com
 EMAIL_PASSWORD=your_app_specific_password
 ```
+### 4. Download and install wkhtmltopdf package to convert html files to pdf reports
 
+- Download wkhtmltopdf package from https://wkhtmltopdf.org/downloads.html
+- Use the following command on Mac terminal to install the package on your machine
+```bash
+Sudo installer -pkg /path_to_package/wkhtmltox-0.12.6-2.macos-cocoa.pkg -target /usr/local/bin
+```
 ## 🔐 Why GOOGLE_APPLICATION_CREDENTIALS Is Required?
 
 Gemini’s web tools and some Langchain integrations require access to Google Cloud resources (e.g., embedding, vector search). This is authenticated via a service account JSON file, pointed to by GOOGLE_APPLICATION_CREDENTIALS.

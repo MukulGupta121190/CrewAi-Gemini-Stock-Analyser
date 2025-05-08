@@ -48,8 +48,8 @@ The Stock Analysis Report Generator allows users to generate comprehensive stock
 streamlit run app.py
 ```
 ## 🚀 Demo Screenshots
-Application Interface <img width="400" alt="Application Interface" src="https://github.com/user-attachments/assets/35592071-f31c-4dc9-b478-16dafcfe60c2"/>
-<img width="400" alt="Reliance_Industries_Stock_Analysis_Report" src="https://github.com/user-attachments/assets/7b21bf71-fdb9-43cf-bea1-fdab0b6a1f24)"/>
+<img width="450" alt="Application Interface" src="https://github.com/user-attachments/assets/35592071-f31c-4dc9-b478-16dafcfe60c2"/>
+<img width="400" alt="Reliance_Industries_Stock_Analysis_Report" src="https://github.com/user-attachments/assets/95113f64-643a-427e-98ab-a4401da441b5"/>
 
 ## 📦 Setup Instructions
 

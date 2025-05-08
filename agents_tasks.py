@@ -1,95 +1,102 @@
-from crewai import Agent, Task, Crew, Process
-from crewai.tasks import TaskOutput 
-from crewai_tools import WebsiteSearchTool, ScrapeWebsiteTool
-from custom_tools import fetch_stock_data, fetch_stock_financials, fetch_stock_news
+from crewai import Agent, Task, Crew, Process, LLM
+from custom_tools import (
+    fetch_stock_data, 
+    fetch_stock_financials, 
+    fetch_stock_news,
+    search_tool,
+    get_current_stock_price
+)
+import os
+from datetime import datetime
 
-search_tool = WebsiteSearchTool()
-scrape_tool = ScrapeWebsiteTool()
+# Current date for context
+Today = datetime.now().strftime("%Y-%m-%d")
 
-# Callbacks 
-# def crew_step_callback(agent, task, step):
-#     print(f"Step Callback - Agent: {agent.role}, Task: {task.description}, Step: {step}")
+# Set dummy OpenAI API key to bypass validation
+os.environ["OPENAI_API_KEY"] = "dummy-key"
 
-# def crew_task_callback(output: TaskOutput):
-#     print(f"Task Callback - Task Completed: {output.description}")
+# Create a single LLM instance to be used by all agents
+def get_llm():
+    gemini_key = os.getenv("GEMINI_API_KEY")
+    model_name = os.getenv("MODEL_NAME") # Use the standard model name
+    
+    if not gemini_key:
+        raise ValueError("Missing GEMINI_API_KEY in .env file")
+    
+    # Create CrewAI LLM instance with Gemini
+    return LLM(
+        provider="google",
+        model=model_name,
+        api_key=gemini_key,
+        temperature=0,
+        verbose=True
+    )
 
-# Data collection 
+# Create the LLM instance
+llm_instance = get_llm()
+
+# Create embeddings instance
+""" embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2",
+    model_kwargs={'device': 'cpu'}
+) """
+
+# Agent for gathering financial data
 data_collector = Agent(
     role="Stock Data Collector",
     goal="Efficiently gather stock market data for financial analysis.",
     backstory=("A reliable financial data collector who has access to stock data APIs and tools."),
+    llm=llm_instance,
     tools=[fetch_stock_data, fetch_stock_financials],
     verbose=True,
     max_iter=5,
     allow_delegation=False, 
+
 )
 
 data_collection_task = Task(
     description="Collect key stock data metrics for {company_stock} using its ticker format. Use only the data provided and do not request for more metrics.",
-    expected_output="Data about most relevant financial metrics for stock analysis.",
+    expected_output="Data about most relevant financial metrics, income statement for stock analysis. Indicate also about current financial status and trend over the period",
     agent=data_collector,
     async_execution=False,
 )
 
 # News Researcher 
 news_reader = Agent(
-    role="News Reader",
-    goal="Find and summarize the latest news articles about the company.",
-    backstory=("A diligent researcher who keeps an eye on the latest financial news and trends that impact stock performance."),
-    tools=[fetch_stock_news, search_tool, scrape_tool],
+    role="News and Info Researcher",
+    goal="Gather and provide the latest news and information about the company from the internet",
+    llm=llm_instance,
     verbose=True,
+    backstory=f"You are an expert researcher who can gather detailed information about a company. Consider you are on: {Today}",
+    tools=[search_tool],
+    cache=True,
     max_iter=5,
     allow_delegation=False, 
 )
 
 news_reader_task = Task(
-    description="Find the latest financial news for {company_stock} and summarize the key points from recent articles.",
-    expected_output="A summary of the most recent and relevant news articles about {company_stock}.",
+    description="Find the latest financial news and business information about company: {company_stock} and summarize the key points from recent articles.",
+    expected_output="A summary of the latest news and business information about {company_stock}.",
     agent=news_reader,
-    async_execution=False,
-)
-
-# Stock Market Researcher 
-stock_market_researcher = Agent(
-    role="Stock Market Researcher",
-    goal="Research stock performance, market trends and industry movements to provide insights.",
-    backstory=("An experienced stock market researcher who gathers information from sources to offer insights about the performance of the company."),
-    tools=[search_tool, scrape_tool],  
-    verbose=True,
-    max_iter=10,
-    allow_delegation=False,  
-    max_execution_time=180,
-    max_retry_limit=2,
-)
-
-stock_market_research_task = Task( 
-    description=(
-        "Conduct research on {company_stock} focusing on these topics:\n"
-        "- General market trends effecting the company.\n"
-        "- Industry comparisons between competitors and recent events affecting the company.\n"
-        "- Risks and opportunities related to current market conditions.\n"
-        "Rules: Perform up to 3 different search queries per topic. "
-        "Do not repeat the same queries if the result is not helpful. "
-        "If the information is unavailable after the 3 attempts then skip to the next topic. "
-        "IMPORTANT: If the website returns a cookie consent information prevents scraping content after 1 attempt then never search that website again."
-    ),
-    expected_output=(
-        "A clear analysis of {company_stock} covering market trends, industry comparisons, risks and opportunities."
-    ),
-    agent=stock_market_researcher,
-    async_execution=False,
+    llm=llm_instance,
 )
 
 # Financial Analyst  
 financial_analyst = Agent(
     role="Financial Analyst",
-    goal="Analyze financial stock data and use information about the company to write a comprehensive stock analysis report.",
-    backstory=("A skilled financial analyst who analyzes company data and provides detailed stock reports."),
+    goal="Analyze financial stock data and use stock information to write a comprehensive stock analysis report.",
+    backstory=(
+        f"You are an expert in analyzing financial data, stock/company-related current information and "
+        f"making a comprehensive stock analysis report. Use Indian units for numbers (lakh,crore). "
+        f"Consider you are on: {Today}"
+    ),
+    tools=[fetch_stock_data, fetch_stock_financials, fetch_stock_news],
     verbose=True,
     max_iter=5,
-    allow_delegation=False,  
+    llm=llm_instance,
 )
 
+# Task to analyse financial data and news
 financial_analysis_task = Task(
     description=(
         "Analyze the research on {company_stock} and write a comprehensive stock analysis report."
@@ -101,40 +108,48 @@ financial_analysis_task = Task(
     agent=financial_analyst,
     output_file="stock_report.txt",
     async_execution=False,
-    context=[data_collection_task, news_reader_task, stock_market_research_task],
+    context=[data_collection_task, news_reader_task],
+    llm=llm_instance,
 )
 
-manager = Agent(
-    role="Project Manager",
-    goal="Coordinate the entire stock analysis workflow, ensuring that all agents complete their tasks efficiently and that the final report is comprehensive and accurate.",
+financial_expert = Agent(
+    role="Financial Expert",
+    goal="Coordinate financial analysis of a stock, make investment recommendations",
     backstory=(
-        "An expert project manager with a deep understanding of financial analysis and stock market trends. "
-        "You are responsible for managing the flow of tasks, ensuring data collection, research and report writing are done in a coordinated manner."
-        "You must make sure that no tasks are repeated and only use the information provided."
+        f"You are an expert financial advisor who can provide investment recommendations. "
+        f"Consider the financial analysis, current information about the company, current stock price, "
+        f"and make recommendations about whether to buy/hold/sell a stock along with reasons. "
+        f"When using tools, try with and without the suffix '.NS' to the stock symbol and see what works. "
+        f"Consider you are on: {Today}"
     ),
-    allow_delegation=True,  
+    llm=llm_instance,
+    verbose=True,
+    tools=[get_current_stock_price, fetch_stock_data],
+    max_iter=5,
 )
 
-# Hierarchical Agents
+# Task to make investment recommendations
+advise = Task(
+    description=(
+        "Make a recommendation about investing in a stock, based on the financial analysis and current stock price. "
+        "First, get the current stock price using the get_current_stock_price tool. "
+        "Then, analyze the financial data and make a recommendation. "
+        "Explain the reasons for your recommendation."
+    ),
+    expected_output=(
+        "A recommendation about whether to buy/hold/sell a stock along with elaborated reasons, "
+        "including current price analysis and financial metrics."
+    ),
+    agent=financial_expert,
+    context=[financial_analysis_task],
+    llm=llm_instance,
+)
+
 crew = Crew(
-    agents=[data_collector, news_reader, stock_market_researcher, financial_analyst],
-    tasks=[data_collection_task, news_reader_task, stock_market_research_task, financial_analysis_task],
-    process=Process.hierarchical,  
-    manager_agent=manager,
-    full_output=True,
-    verbose=True, 
-    memory=True, 
-    planning=True,
-    # step_callback=crew_step_callback,
-    # task_callback=crew_task_callback,
+    agents=[data_collector, news_reader, financial_analyst, financial_expert],
+    tasks=[data_collection_task, news_reader_task, financial_analysis_task, advise],
+    verbose=True,
+    process=Process.sequential,
+    memory=False,  # Disable memory to prevent RAG storage errors
+    llm=llm_instance
 )
-
-# Sequential Agents
-# crew = Crew(
-#     agents=[data_collector, news_reader, financial_analyst],
-#     tasks=[data_collection_task, news_reader_task, financial_analysis_task],
-#     process=Process.sequential,  
-#     full_output=True,
-#     verbose=True, 
-#     memory=True, 
-# )

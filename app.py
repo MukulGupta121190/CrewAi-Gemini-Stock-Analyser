@@ -1,7 +1,5 @@
 import streamlit as st
 import os
-# from dotenv import load_dotenv
-# import agentops
 import markdown
 import pdfkit
 
@@ -11,10 +9,6 @@ initialize_app()
 from agents_tasks import crew
 from custom_tools import send_report
 
-# load_dotenv()
-# agentops.init()
-# os.environ["OPENAI_MODEL_NAME"] = 'gpt-3.5-turbo' 
-# print(f"Model being used: {os.getenv('OPENAI_MODEL_NAME')}")
 
 st.title("Stock Analysis Report Generator")
 
@@ -66,7 +60,7 @@ if st.session_state['report_generated']:
         file.write(html)
 
     # Convert HTML to PDF report 
-    config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
+    config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
     pdfkit.from_file("stock_report.html", "stock_report.pdf", configuration=config)
 
     # Display chain of thought reasoning and API call metrics 

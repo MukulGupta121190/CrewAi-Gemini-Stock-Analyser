@@ -104,6 +104,7 @@ Contributions to this project are welcome! If you have any ideas for improvement
 
 ## Contact
 - 📫 How to reach me: **mukulgupta121190@gmail.com** | **https://www.linkedin.com/in/mukulgupta0991/**
+For any questions or issues, please contact **[mukulgupta121190@gmail.com]** or feel free to reach out to me on **[LinkedIn](https://www.linkedin.com/in/mukulgupta0991/)**.
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">

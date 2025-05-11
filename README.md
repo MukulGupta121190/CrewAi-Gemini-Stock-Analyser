@@ -1,6 +1,9 @@
 
 
 # CrewAI Multi Agent Stock Analyzer 📊🤖
+![Agentic-AI Stock Analysis App](https://github.com/user-attachments/assets/b16234cb-3791-4af5-8ef3-b16cd7f2e3dd)
+
+
 **An AI-powered stock analysis and investment recommendation app built using [CrewAI Agents](https://www.crewai.com), [Gemini LLM](https://ai.google.dev/), [DuckDuckGo Search](https://duckduckgo.com/) and real-time financial data via Yahoo Finance. The application uses multi-agent AI with Gemini models to collect stock data, news, research/web scraping and perform financial analysis & generates comprehensive reports, news summaries, and buy/hold/sell advice.**
 
 
@@ -27,7 +30,7 @@
 - **smtplib** – Email dispatch functionality
 
 
-## 🤖🤖 Agents:**
+## 🤖🤖 Agents:
 - Stock Data Collector
 - News Reader
 - Financial Analyst
@@ -97,3 +100,17 @@ os.environ["OPENAI_API_KEY"] = "dummy-key"
 os.environ["AGENTOPS_DISABLED"] = "true"
 ```
 This bypasses internal validation and disables telemetry via AgentOps.
+
+## Contributions
+Contributions to this project are welcome! If you have any ideas for improvements, bug fixes, or new features, feel free to submit a pull request.
+
+## Contact
+- 📫 How to reach me: **mukulgupta121190@gmail.com** | **https://www.linkedin.com/in/mukulgupta0991/**
+
+<h3 align="left">Connect with me:</h3>
+<p align="left">
+<a href="https://www.linkedin.com/in/mukulgupta0991" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="mukulgupta0991" height="30" width="40" /></a>
+<a href="https://www.hackerrank.com/mukulgupta121190" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/hackerrank.svg" alt="mukulgupta121190" height="30" width="40" /></a>
+<a href="https://medium.com/@mukulgupta121190" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/medium.svg" alt="@mukulgupta121190" height="30" width="40" /></a>
+<a href="https://kaggle.com/mukulgupta121190" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/kaggle.svg" alt="mukulgupta121190" height="30" width="40" /></a>
+</p>

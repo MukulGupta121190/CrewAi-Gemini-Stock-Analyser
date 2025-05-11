@@ -1,13 +1,11 @@
 
 
 # CrewAI Multi Agent Stock Analyzer 📊🤖
-![Agentic-AI Stock Analysis App](https://github.com/user-attachments/assets/b16234cb-3791-4af5-8ef3-b16cd7f2e3dd)
 
+<img align="right" alt="Agentic AI Stock Analyser APP" height="220" width="500" src="https://github.com/user-attachments/assets/b16234cb-3791-4af5-8ef3-b16cd7f2e3dd">
 
 **An AI-powered stock analysis and investment recommendation app built using [CrewAI Agents](https://www.crewai.com), [Gemini LLM](https://ai.google.dev/), [DuckDuckGo Search](https://duckduckgo.com/) and real-time financial data via Yahoo Finance. The application uses multi-agent AI with Gemini models to collect stock data, news, research/web scraping and perform financial analysis & generates comprehensive reports, news summaries, and buy/hold/sell advice.**
 
-
----
 
 ## 🔍 Features
 
